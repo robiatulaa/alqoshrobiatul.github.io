@@ -19,30 +19,6 @@
 		  #pager .page-btn.active { 
 		    background:#ffffff; color:#111 !important; border-color:#ffffff;
 		  }
-		.thumb .icon {
-		  font-size:40px;
-		  color:var(--accent);
-		}
-		.pagination {
-		  text-align:center;
-		  margin-top:20px;
-		}
-		.pagination .page-btn {
-		  display:inline-block;
-		  margin:0 .25rem;
-		  padding:.5rem .9rem;
-		  border:1px solid rgba(255,255,255,.25);
-		  border-radius:6px;
-		  cursor:pointer;
-		  text-decoration:none;
-		  color:var(--text);
-		}
-		.pagination .page-btn.active {
-		  background:#ffffff;
-		  color:#111 !important;
-		  border-color:#ffffff;
-		}
-
 		</style>
 
 	</head>
@@ -184,38 +160,47 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 			<script>
-			(function(){
-			  var pageSize = 4; 
-			  var items = document.querySelectorAll('.project-item');
-			  var total = items.length;
-			  var totalPages = Math.ceil(total / pageSize);
-			  var pager = document.getElementById('pager');
+			  (function($){
+			    var pageSize = 4; 
+			    var $list  = $('#projects');
+			    var $items = $list.children('section.feature');
+			    var total = $items.length;
+			    var totalPages = Math.max(1, Math.ceil(total / pageSize));
 			
-			  function showPage(p){
-			    p = Math.max(1, Math.min(p, totalPages));
-			    items.forEach((el,i)=>{
-			      el.style.display = (i >= (p-1)*pageSize && i < p*pageSize) ? '' : 'none';
-			    });
-			    pager.innerHTML = '';
-			    for(let i=1;i<=totalPages;i++){
-			      let btn = document.createElement('a');
-			      btn.href="#projects";
-			      btn.className="page-btn"+(i===p?" active":"");
-			      btn.textContent=i;
-			      btn.addEventListener('click',e=>{
-			        e.preventDefault();
-			        showPage(i);
-			      });
-			      pager.appendChild(btn);
-			    }
-			  }
-			  showPage(1);
-			})();
-			</script>
+			    function showPage(p){
+			      p = Math.max(1, Math.min(p, totalPages));
+			      var start = (p-1)*pageSize;
+			      var end   = start + pageSize;
 
+			      $items.each(function(i){
+			        $(this).toggle(i >= start && i < end);
+			      });
+			
+			      var $pager = $('#pager').empty();
+			      for (let i=1; i<=totalPages; i++){
+			        $('<a/>', {
+			          href: '#',
+			          class: 'page-btn' + (i===p ? ' active' : ''),
+			          text: i
+			        }).on('click', function(e){
+			          e.preventDefault();
+			          showPage(i);
+			          try { location.hash = 'page=' + i; } catch(e){}
+			        }).appendTo($pager);
+			      }
+			    }
+				  
+			    var initial = 1;
+			    var m = location.hash && location.hash.match(/page=(\d+)/i);
+			    if (m) initial = parseInt(m[1], 10) || 1;
+			
+			    showPage(initial);
+			  })(jQuery);
+			</script>
 
 	</body>
 </html>
+
 
 
 
