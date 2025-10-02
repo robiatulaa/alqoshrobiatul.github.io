@@ -10,6 +10,17 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<style>
+		  #pager .page-btn {
+		    display:inline-block; margin:0 .25rem; padding:.5rem .9rem;
+		    border:1px solid rgba(255,255,255,.25); border-radius:6px;
+		    cursor:pointer; text-decoration:none;
+		  }
+		  #pager .page-btn.active { 
+		    background:#ffffff; color:#111 !important; border-color:#ffffff;
+		  }
+		</style>
+
 	</head>
 	<body class="is-preload">
 
@@ -34,7 +45,7 @@
 
 				</header>
 
-				<div class="box alt container">
+				<div class="box alt container" id="projects">
 					<section class="feature right">
 						<a href="https://datastudio.google.com/reporting/cc9111d7-cf74-478e-a482-7a0dd09a189c" class="image icon solid"><img src="images/gdssoldays.jpg" alt="" /></a>
 						<div class="content">
@@ -84,6 +95,9 @@
 							<p>I made data warehousing from TheLook e-commerce database with SQL, and also cleaned the data, after that I visualized with Tableau and Google Data Studio.</p>
 						</div>
 					</section>
+					
+					<!-- Kontainer pagination -->
+				  	<div id="pager" class="actions special" style="margin-top: 2rem;"></div>
 				</div>
 
 
@@ -127,8 +141,8 @@
 					</form>
 					<ul class="icons">
 						<li><a href="https://www.linkedin.com/in/robiatulaa/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-						<li><a href="https://www.instagram.com/wiwi_alqosh/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="https://twitter.com/wiwi_alqosh" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="https://www.instagram.com/biatul_wiwi/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="https://twitter.com/biatul_wiwi" class="icon brands fa-twitter"><span class="label">X</span></a></li>
 						<li><a href="https://www.facebook.com/robiatulaa" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
 						<li><a href="https://github.com/robiatulaa" class="icon brands fa-github"><span class="label">Github</span></a></li>
 					</ul>
@@ -146,7 +160,52 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script>
+			  (function($){
+			    // Konfigurasi
+			    var pageSize = 4; // jumlah project per halaman
+			    var $list = $('#projects');
+			    var $items = $list.find('.project-item');
+			    var total = $items.length;
+			    var totalPages = Math.max(1, Math.ceil(total / pageSize));
+			
+			    function showPage(p){
+			      // batas halaman
+			      p = Math.max(1, Math.min(p, totalPages));
+			      // tampil/sembunyi item
+			      $items.each(function(i, el){
+			        var start = (p-1)*pageSize;
+			        var end = start + pageSize;
+			        $(el).toggle(i >= start && i < end);
+			      });
+			      // render tombol
+			      var $pager = $('#pager').empty();
+			      for (var i=1;i<=totalPages;i++){
+			        var $btn = $('<a href="#" class="page-btn"></a>')
+			          .text(i)
+			          .toggleClass('active', i === p)
+			          .on('click', function(e){
+			            e.preventDefault();
+			            var n = parseInt($(this).text(),10);
+			            showPage(n);
+			            // update hash (opsional, biar bisa share link halaman)
+			            location.hash = 'page=' + n;
+			          });
+			        $pager.append($btn);
+			      }
+			    }
+			
+			    // Baca dari URL hash (opsional): #page=2
+			    var initial = 1;
+			    if (location.hash && /page=(\\d+)/i.test(location.hash)){
+			      initial = parseInt(location.hash.match(/page=(\\d+)/i)[1],10) || 1;
+			    }
+			
+			    showPage(initial);
+			  })(jQuery);
+			</script>
 
 	</body>
 </html>
+
 
