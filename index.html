@@ -19,6 +19,30 @@
 		  #pager .page-btn.active { 
 		    background:#ffffff; color:#111 !important; border-color:#ffffff;
 		  }
+		.thumb .icon {
+		  font-size:40px;
+		  color:var(--accent);
+		}
+		.pagination {
+		  text-align:center;
+		  margin-top:20px;
+		}
+		.pagination .page-btn {
+		  display:inline-block;
+		  margin:0 .25rem;
+		  padding:.5rem .9rem;
+		  border:1px solid rgba(255,255,255,.25);
+		  border-radius:6px;
+		  cursor:pointer;
+		  text-decoration:none;
+		  color:var(--text);
+		}
+		.pagination .page-btn.active {
+		  background:#ffffff;
+		  color:#111 !important;
+		  border-color:#ffffff;
+		}
+
 		</style>
 
 	</head>
@@ -45,7 +69,7 @@
 
 				</header>
 
-				<div class="box alt container" id="projects">
+				<!-- <div class="box alt container" id="projects">
 					<section class="feature right">
 						<a href="https://datastudio.google.com/reporting/cc9111d7-cf74-478e-a482-7a0dd09a189c" class="image icon solid"><img src="images/gdssoldays.jpg" alt="" /></a>
 						<div class="content">
@@ -94,11 +118,48 @@
 							<h3>TheLook Users in 2019-2022 Report</h3>
 							<p>I made data warehousing from TheLook e-commerce database with SQL, and also cleaned the data, after that I visualized with Tableau and Google Data Studio.</p>
 						</div>
-					</section>
+					</section> -->
 					
 					<!-- Kontainer pagination -->
-				  	<div id="pager" class="actions special" style="margin-top: 2rem;"></div>
-				</div>
+				  	<!-- <div id="pager" class="actions special" style="margin-top: 2rem;"></div>
+				</div> -->
+				<!-- PROJECTS -->
+				<section id="projects" class="container">
+				  <h2>Projects</h2>
+				  <div class="grid">
+				    <!-- 1 -->
+				    <article class="card project-item">
+				      <a class="thumb" href="https://datastudio.google.com/reporting/cc9111d7-cf74-478e-a482-7a0dd09a189c" target="_blank" rel="noopener">
+				        <div class="icon">📊</div>
+				      </a>
+				      <div class="card-body">
+				        <h3>Sales Report Dashboard (SOLDAYS)</h3>
+				        <div class="meta">Looker Studio · KPIs monitoring</div>
+				        <div class="tags"><span class="tag">BI</span><span class="tag">Dashboard</span></div>
+				      </div>
+				    </article>
+				
+				    <!-- 2 -->
+				    <article class="card project-item">
+				      <a class="thumb" href="https://docs.google.com/presentation/d/1xXjWFqdMQgt2bksvaeQPOtHeZUKoN7VZQGWrwLcOgwc/edit?usp=sharing" target="_blank" rel="noopener">
+				        <div class="icon">🤖</div>
+				      </a>
+				      <div class="card-body">
+				        <h3>Machine Learning: Credit Scoring</h3>
+				        <div class="meta">Python · Random Forest</div>
+				        <div class="tags"><span class="tag">Classification</span><span class="tag">ML</span></div>
+				      </div>
+				    </article>
+				
+				    <!-- Tambahkan project lainnya dengan struktur sama -->
+				  </div>
+				
+				  <!-- Garis pemisah -->
+				  <hr style="border:1px solid var(--border);margin:30px 0">
+				
+				  <!-- Pagination -->
+				  <div id="pager" class="pagination"></div>
+				</section>
 
 
 				<footer class="major container medium">
@@ -161,52 +222,39 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 			<script>
-			  (function($){
-			    // Konfigurasi
-			    var pageSize = 4; // jumlah project per halaman
-			    var $list  = $('#projects');
-			    // 👉 Ambil langsung semua section proyek (kan sudah pakai class "feature")
-			    var $items = $list.children('section.feature');
-			    var total = $items.length;
-			    var totalPages = Math.max(1, Math.ceil(total / pageSize));
+			(function(){
+			  var pageSize = 4; 
+			  var items = document.querySelectorAll('.project-item');
+			  var total = items.length;
+			  var totalPages = Math.ceil(total / pageSize);
+			  var pager = document.getElementById('pager');
 			
-			    function showPage(p){
-			      p = Math.max(1, Math.min(p, totalPages));
-			      var start = (p-1)*pageSize;
-			      var end   = start + pageSize;
-			
-			      // Tampilkan hanya item pada halaman aktif
-			      $items.each(function(i){
-			        $(this).toggle(i >= start && i < end);
+			  function showPage(p){
+			    p = Math.max(1, Math.min(p, totalPages));
+			    items.forEach((el,i)=>{
+			      el.style.display = (i >= (p-1)*pageSize && i < p*pageSize) ? '' : 'none';
+			    });
+			    pager.innerHTML = '';
+			    for(let i=1;i<=totalPages;i++){
+			      let btn = document.createElement('a');
+			      btn.href="#projects";
+			      btn.className="page-btn"+(i===p?" active":"");
+			      btn.textContent=i;
+			      btn.addEventListener('click',e=>{
+			        e.preventDefault();
+			        showPage(i);
 			      });
-			
-			      // Render tombol halaman
-			      var $pager = $('#pager').empty();
-			      for (let i=1; i<=totalPages; i++){
-			        $('<a/>', {
-			          href: '#',
-			          class: 'page-btn' + (i===p ? ' active' : ''),
-			          text: i
-			        }).on('click', function(e){
-			          e.preventDefault();
-			          showPage(i);
-			          // opsional: simpan nomor halaman di URL hash
-			          try { location.hash = 'page=' + i; } catch(e){}
-			        }).appendTo($pager);
-			      }
+			      pager.appendChild(btn);
 			    }
-			
-			    // Baca halaman awal dari hash (mis. #page=2)
-			    var initial = 1;
-			    var m = location.hash && location.hash.match(/page=(\d+)/i);
-			    if (m) initial = parseInt(m[1], 10) || 1;
-			
-			    showPage(initial);
-			  })(jQuery);
+			  }
+			  showPage(1);
+			})();
 			</script>
+
 
 	</body>
 </html>
+
 
 
 
