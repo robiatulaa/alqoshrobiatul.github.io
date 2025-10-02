@@ -164,42 +164,42 @@
 			  (function($){
 			    // Konfigurasi
 			    var pageSize = 4; // jumlah project per halaman
-			    var $list = $('#projects');
-			    var $items = $list.find('.project-item');
+			    var $list  = $('#projects');
+			    // 👉 Ambil langsung semua section proyek (kan sudah pakai class "feature")
+			    var $items = $list.children('section.feature');
 			    var total = $items.length;
 			    var totalPages = Math.max(1, Math.ceil(total / pageSize));
 			
 			    function showPage(p){
-			      // batas halaman
 			      p = Math.max(1, Math.min(p, totalPages));
-			      // tampil/sembunyi item
-			      $items.each(function(i, el){
-			        var start = (p-1)*pageSize;
-			        var end = start + pageSize;
-			        $(el).toggle(i >= start && i < end);
+			      var start = (p-1)*pageSize;
+			      var end   = start + pageSize;
+			
+			      // Tampilkan hanya item pada halaman aktif
+			      $items.each(function(i){
+			        $(this).toggle(i >= start && i < end);
 			      });
-			      // render tombol
+			
+			      // Render tombol halaman
 			      var $pager = $('#pager').empty();
-			      for (var i=1;i<=totalPages;i++){
-			        var $btn = $('<a href="#" class="page-btn"></a>')
-			          .text(i)
-			          .toggleClass('active', i === p)
-			          .on('click', function(e){
-			            e.preventDefault();
-			            var n = parseInt($(this).text(),10);
-			            showPage(n);
-			            // update hash (opsional, biar bisa share link halaman)
-			            location.hash = 'page=' + n;
-			          });
-			        $pager.append($btn);
+			      for (let i=1; i<=totalPages; i++){
+			        $('<a/>', {
+			          href: '#',
+			          class: 'page-btn' + (i===p ? ' active' : ''),
+			          text: i
+			        }).on('click', function(e){
+			          e.preventDefault();
+			          showPage(i);
+			          // opsional: simpan nomor halaman di URL hash
+			          try { location.hash = 'page=' + i; } catch(e){}
+			        }).appendTo($pager);
 			      }
 			    }
 			
-			    // Baca dari URL hash (opsional): #page=2
+			    // Baca halaman awal dari hash (mis. #page=2)
 			    var initial = 1;
-			    if (location.hash && /page=(\\d+)/i.test(location.hash)){
-			      initial = parseInt(location.hash.match(/page=(\\d+)/i)[1],10) || 1;
-			    }
+			    var m = location.hash && location.hash.match(/page=(\d+)/i);
+			    if (m) initial = parseInt(m[1], 10) || 1;
 			
 			    showPage(initial);
 			  })(jQuery);
@@ -207,5 +207,6 @@
 
 	</body>
 </html>
+
 
 
