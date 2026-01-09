@@ -1,6 +1,6 @@
 # Personal Portfolio Website
 
-🌐 **Live Website**: [https://robiatulaa/alqoshrobiatul.github.io](https://robiatulaa/alqoshrobiatul.github.io)
+🌐 **Live Website**: [https://alqoshrobiatul.github.io](https://robiatulaa.github.io/alqoshrobiatul.github.io/)
 
 This repository hosts the source code for my **personal portfolio website**, built to showcase my projects, skills, and professional journey in **Data Analytics & Data Science**. The site is deployed using **GitHub Pages** and designed as a clean, responsive single-page portfolio.
 
@@ -79,4 +79,5 @@ If you’re interested in collaboration, opportunities, or just want to connect,
 ---
 
 © 2025 Robiatul Adawiyah Al-Qosh — Built with ❤️ and data
+
 
